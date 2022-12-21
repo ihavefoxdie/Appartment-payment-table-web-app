@@ -1,0 +1,127 @@
+﻿@model IEnumerable<Lab1DBwithASP.Models.ApartmentModel>
+
+@{
+    ViewData["Title"] = "View";
+}
+<p>
+    <h1>View</h1>
+
+    @*<p>
+        <a asp-action="Create">Create New</a>
+    </p>*@
+
+    <div class="form-group">
+        <a class="btn btn-primary" href="/Apartment/CreateForm/" role="button">Create New</a>
+    </div>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Additional)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Paid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Left)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Year)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.Month)
+            </th>*@
+            <th>
+                Jan
+            </th>
+            <th>
+                Feb
+            </th>
+            <th>
+                Mar
+            </th>
+            <th>
+                Apr
+            </th>
+            <th>
+                May
+            </th>
+            <th>
+                June
+            </th>
+            <th>
+                July
+            </th>
+            <th>
+                Aug
+            </th>
+            <th>
+                Sept
+            </th>
+            <th>
+                Oct
+            </th>
+            <th>
+                Nov
+            </th>
+            <th>
+                Dec
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{var variable = Model.ElementAt(0);}
+        @{int count = 0;}
+@foreach (var item in Model) {
+            if(count>0)
+            {
+                if (item.Id == variable.Id){
+                    item.Id = 0;
+                    
+                }
+            }
+            <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.First)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Additional) <br>
+                    @Html.DisplayFor(modelItem => item.Paid) <br>
+                @Html.DisplayFor(modelItem => item.Left) 
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.Paid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Left)
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.Month)
+            </td>*@
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+            count++;
+}
+    </tbody>
+</table>
