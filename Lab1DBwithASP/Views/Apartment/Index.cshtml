@@ -86,8 +86,8 @@
                         @Html.DisplayFor(modelItem => item.ElementAt(0).Id)
                 </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" href="/Product/ShowDetails/@item.ElementAt(0).Id">Add Data</a></li>
                         <li><a class="dropdown-item" asp-action="Delete" asp-route-id="@item.ElementAt(0).Id">Delete</a></li>
+                        <li><a class="dropdown-item" asp-action="UpdateForm" asp-route-id="@item.ElementAt(0).Id">Update</a></li>
                     </ul>
             </td>
             <td>

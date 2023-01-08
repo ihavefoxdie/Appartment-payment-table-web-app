@@ -63,6 +63,13 @@ namespace Lab1DBwithASP.Controllers
             return View(apartment);
         }
 
+        public IActionResult Update(ApartmentModel apartmentModel)
+        {
+            ApartmentDAO apartmentDAO = new();
+            apartmentDAO.Update(apartmentModel);
+            return View("Index", apartmentDAO.GetApartments());
+        }
+
         // POST: AppartmentController/Edit/5
         /*[HttpPost]
         [ValidateAntiForgeryToken]
@@ -81,7 +88,9 @@ namespace Lab1DBwithASP.Controllers
         // GET: AppartmentController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            ApartmentDAO apartmentDAO = new();
+            apartmentDAO.Delete(id);
+            return RedirectToAction("Index");
         }
 
         // POST: AppartmentController/Delete/5
