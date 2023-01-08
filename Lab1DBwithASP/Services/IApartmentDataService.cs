@@ -6,7 +6,7 @@
 
         List<ApartmentModel> SearchApartments(string query);
 
-        ApartmentModel GetApartmentById(int id);
+        ApartmentModel GetApartmentById(int id, int year, int month);
 
         bool Insert(ApartmentModel model);
         int Update(ApartmentModel model);

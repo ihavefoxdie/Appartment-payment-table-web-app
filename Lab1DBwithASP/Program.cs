@@ -1,3 +1,5 @@
+using MySql.Data.MySqlClient;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -25,3 +27,4 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+//MySqlConnectionStringBuilder connectionString = new("server=localhost;uid=root;pwd=qwerty123;database=balancedb");

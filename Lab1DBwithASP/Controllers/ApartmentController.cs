@@ -15,10 +15,10 @@ namespace Lab1DBwithASP.Controllers
         }
 
         // GET: AppartmentController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, int year, int month)
         {
             ApartmentDAO apartmentDAO = new();
-            ApartmentModel foundModel = apartmentDAO.GetApartmentById(id);
+            ApartmentModel foundModel = apartmentDAO.GetApartmentById(id, year, month);
             return View(foundModel);
         }
 

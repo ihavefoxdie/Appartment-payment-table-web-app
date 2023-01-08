@@ -96,7 +96,7 @@
                 @foreach(var subitem in item)
                 {
                     <td>
-                        <a class="btn btn-outline-primary" href="/Apartment/Details/@subitem.Id" role="button">
+                        <a class="btn btn-outline-primary" href="/Apartment/Details/?id=@subitem.Id&year=@subitem.Year&month=@subitem.MonthId" role="button">
                         @Html.DisplayFor(modelItem => subitem.Additional)  <br>
                         @Html.DisplayFor(modelItem => subitem.Paid)        <br>
                         @Html.DisplayFor(modelItem => subitem.Left) </a>
