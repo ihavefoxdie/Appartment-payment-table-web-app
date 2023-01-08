@@ -9,7 +9,41 @@ namespace Lab1DBwithASP.Services
 
         public int Delete(int id)
         {
-            throw new NotImplementedException();
+            string sqlStatement = "DELETE FROM apartvalues WHERE fk_id_apartment = @Id;\r\nDELETE FROM turnoversheet WHERE id = @Id;";
+
+            using (MySqlConnection connection = new(connectionString))
+            {
+                MySqlCommand sqlCommand = new(sqlStatement, connection);
+                sqlCommand.Parameters.AddWithValue("@Id", id);
+                try
+                {
+                    connection.Open();
+
+                    sqlCommand.ExecuteNonQuery();
+                    return id;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            return 0;
+        }
+
+        public int Edit(ApartmentModel apartment)
+        {
+            int idNumber = -1;
+
+            string sqlStatement;
+            using (MySqlConnection connection = new())
+            {
+                while(true)
+                {
+
+                }
+            }
+
+            return - 1;
         }
 
         public ApartmentModel GetApartmentById(int id)
@@ -104,7 +138,6 @@ namespace Lab1DBwithASP.Services
             string sqlStatement = "INSERT INTO turnoversheet (id, inSaldo) VALUES (@id, @inSaldo);\r\nINSERT INTO apartvalues (fk_id_month, additional, paid, apartvalues.remaining, fk_id_apartment, apartvalues.year) VALUES (@id_month, @additional, @paid, @remain, @id, @yearnum);";
 
 
-
             using MySqlConnection connection = new(connectionString);
             MySqlCommand sqlCommand = new(sqlStatement, connection);
 
@@ -146,9 +179,9 @@ namespace Lab1DBwithASP.Services
         {
             int idNumber = -1;
 
-            string sqlStatement = "INSERT INTO apartvalues (fk_id_month, additional, paid, apartvalues.remaining, fk_id_apartment, apartvalues.year) VALUES (@id_month, @additional, @paid, @remain, @id, @yearnum);";
+            string sqlStatement = "INSERT INTO apartvalues (fk_id_month, additional, paid, apartvalues.remaining, fk_id_apartment, apartvalues.year) VALUES (@id_month, @additional, @paid, @remain, @id, @year);";
             string yearStatement = "SELECT year FROM apartvalues t1 WHERE t1.fk_id_apartment = @id order by year desc";
-            string monthStatement = "SELECT fk_id_month FROM apartvalues t1 WHERE t1.fk_id_apartment = @id AND t1.year = @currentYear order by fk_id_month desc";
+            string monthStatement = "SELECT fk_id_month FROM apartvalues t1 WHERE t1.fk_id_apartment = @id AND t1.year = @year order by fk_id_month desc";
 
 
             using MySqlConnection connection = new(connectionString);
@@ -157,37 +190,49 @@ namespace Lab1DBwithASP.Services
             sqlCommand.Parameters.Add("@id", MySqlDbType.UInt32).Value = model.Id;
             try
             {
-                int year = 0, month = 0;
+                UInt32 year = 0;
+                int month = 0;
+                double Debt = 0;
 
                 connection.Open();
                 MySqlDataReader reader = sqlCommand.ExecuteReader();
-                year = (int)reader[0];
+                reader.Read();
+                year = (UInt32)reader[0];
+                reader.Close();
 
                 sqlCommand = new(monthStatement, connection);
-                reader.Close();
+                sqlCommand.Parameters.Add("@id", MySqlDbType.UInt32).Value = model.Id;
+                sqlCommand.Parameters.Add("@year", MySqlDbType.UInt32).Value = year;
                 reader = sqlCommand.ExecuteReader();
+                reader.Read();
                 month = (int)reader[0];
                 reader.Close();
 
-                string lastMonth = "SELECT remaining FROM apartvalues t1 WHERE t1.fk_id_apartment = @id AND t1.fk_id_month = @lastMonth AND t1.year = @year";
-
-                if (month == 1)
-                {
-
-                }
-                
+                string lastDebt = "SELECT remaining FROM apartvalues t1 WHERE t1.fk_id_apartment = @id AND t1.fk_id_month = @id_month AND t1.year = @year";
+                sqlCommand = new(lastDebt, connection);
+                sqlCommand.Parameters.Add("@id", MySqlDbType.UInt32).Value = model.Id;
+                sqlCommand.Parameters.Add("@id_month", MySqlDbType.Int32).Value = month;
+                sqlCommand.Parameters.Add("@year", MySqlDbType.UInt32).Value = year;
+                reader = sqlCommand.ExecuteReader();
+                reader.Read();
+                Debt = (double)reader[0];
+                reader.Close();
 
                 if (month == 12)
                 {
                     month = 1;
                     year++;
                 }
+                else
+                    month++;
+
+                sqlCommand = new(sqlStatement, connection);
+                sqlCommand.Parameters.Add("@id", MySqlDbType.UInt32).Value = model.Id;
                 sqlCommand.Parameters.Add("@id_month", MySqlDbType.Int32).Value = month;
                 sqlCommand.Parameters.Add("@additional", MySqlDbType.Double).Value = model.Additional;
                 sqlCommand.Parameters.Add("@paid", MySqlDbType.Double).Value = model.Paid;
-                sqlCommand.Parameters.Add("@remain", MySqlDbType.Double).Value = model.Additional + model.First - model.Paid;
-                sqlCommand.Parameters.Add("@yearnum", MySqlDbType.Double).Value = (UInt32)year;
-                sqlCommand = new(sqlStatement, connection);
+                sqlCommand.Parameters.Add("@remain", MySqlDbType.Double).Value = model.Additional + Debt - model.Paid;
+                sqlCommand.Parameters.Add("@year", MySqlDbType.Double).Value = year;
                 sqlCommand.ExecuteNonQuery();
                 return idNumber = (int)model.Id;
             }
