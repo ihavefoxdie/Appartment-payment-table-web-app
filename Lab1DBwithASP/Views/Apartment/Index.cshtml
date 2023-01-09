@@ -6,14 +6,18 @@
 <p>
     <h1>Appartments sheet</h1>
 
-    @*<p>
-        <a asp-action="Create">Create New</a>
-    </p>*@
+    <form asp-action="Index">
+        <div>
+            <input name="year" class="form-control" placeholder="Search Year" style="max-width:8.5%" /> <a class="btn btn-primary" href="/Apartment/CreateForm/" role="button">Create New</a>
+        </div>
+    </form>
 
+    <br />
     <div class="form-group">
-        <a class="btn btn-primary" href="/Apartment/CreateForm/" role="button">Create New</a>
+        
     </div>
 </p>
+
 
 
 
@@ -65,7 +69,6 @@
             <th>
                 Remaining payment
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -86,8 +89,8 @@
                         @Html.DisplayFor(modelItem => item.ElementAt(0).Id)
                 </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" asp-action="Delete" asp-route-id="@item.ElementAt(0).Id">Delete</a></li>
                         <li><a class="dropdown-item" asp-action="UpdateForm" asp-route-id="@item.ElementAt(0).Id">Update</a></li>
+                        <li><a class="dropdown-item" asp-action="Delete" asp-route-id="@item.ElementAt(0).Id">Delete</a></li>
                     </ul>
             </td>
             <td>

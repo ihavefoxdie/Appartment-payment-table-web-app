@@ -8,10 +8,10 @@ namespace Lab1DBwithASP.Controllers
     public class ApartmentController : Controller
     {
         // GET: AppartmentController
-        public IActionResult Index()
+        public IActionResult Index(int year)
         {
             ApartmentDAO apartmentDAO = new();
-            return View(apartmentDAO.GetApartments());
+            return View(apartmentDAO.GetApartments(year));
         }
 
         // GET: AppartmentController/Details/5
@@ -27,7 +27,7 @@ namespace Lab1DBwithASP.Controllers
         {
             ApartmentDAO apartmentDAO =new();
             apartmentDAO.Insert(apartmentModel);
-            return View("Index", apartmentDAO.GetApartments());
+            return View("Index", apartmentDAO.GetApartments((int)apartmentModel.Year));
         }
 
         public ActionResult CreateForm()
@@ -51,15 +51,26 @@ namespace Lab1DBwithASP.Controllers
         }*/
 
         // GET: AppartmentController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, int year, int month)
         {
-            return View();
+            ApartmentDAO apartmentDAO = new();
+            ApartmentModel foundModel = apartmentDAO.GetApartmentById(id, year, month);
+            return View(foundModel);
+        }
+
+        public ActionResult ProcessEdit(ApartmentModel model)
+        {
+            ApartmentDAO apartmentDAO = new();
+            apartmentDAO.Edit(model);
+            return View("Details", apartmentDAO.GetApartmentById((int)model.Id, (int)model.Year, model.MonthId));
         }
 
         public IActionResult UpdateForm(int id)
         {
-            ApartmentModel apartment= new ApartmentModel();
-            apartment.Id = (UInt32)id;
+            ApartmentModel apartment = new()
+            {
+                Id = (UInt32)id
+            };
             return View(apartment);
         }
 
@@ -67,7 +78,7 @@ namespace Lab1DBwithASP.Controllers
         {
             ApartmentDAO apartmentDAO = new();
             apartmentDAO.Update(apartmentModel);
-            return View("Index", apartmentDAO.GetApartments());
+            return View("Index", apartmentDAO.GetApartments((int)apartmentModel.Year));
         }
 
         // POST: AppartmentController/Edit/5

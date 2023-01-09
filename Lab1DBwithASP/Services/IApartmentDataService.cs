@@ -2,7 +2,7 @@
 {
     public interface IApartmentDataService
     {
-        List<ApartmentModel> GetApartments();
+        List<ApartmentModel> GetApartments(int year);
 
         List<ApartmentModel> SearchApartments(string query);
 

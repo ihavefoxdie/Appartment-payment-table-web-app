@@ -9,6 +9,7 @@ namespace Lab1DBwithASP.Models
         public UInt32 Id { get; set; }
         [DisplayName("Initial Payment")]
         public double First { get; set; }
+        [DisplayName("Month Number")]
         public int MonthId { get; set; }
         [DisplayName("Additional Payment")]
         public double Additional { get; set; }
