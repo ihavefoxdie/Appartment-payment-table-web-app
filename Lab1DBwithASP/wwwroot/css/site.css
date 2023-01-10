@@ -22,15 +22,17 @@ body {
 }
 
 table {
-    border: 0px solid aliceblue;
+    border: 0px solid cornsilk;
     font-size: 15px;
     text-align: center;
-    color: aliceblue;
-    background: aliceblue;
+    color: cornsilk;
+    background: cornsilk;
     border-collapse: collapse;
     border-radius: 10px;
     -moz-border-radius: 10px;
 }
+
+
 
 td {
     border: none;
