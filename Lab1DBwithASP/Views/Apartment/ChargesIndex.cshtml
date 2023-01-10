@@ -45,26 +45,25 @@
 
 
             <pre style="float:left"> </pre>
-            <input id="apartsMonth" type="checkbox" value="true" name="apartsMonth" />
-            Get every apartment for selected month <br /> (one apartment for selected year by default)
-            <input type="hidden" value="false" name="apartsMonth" />
+            <input id="apartsMonth" type="checkbox" value="true" name="apartsMonth" /><input type="hidden" value="false" name="apartsMonth" />
+            <label style="font-size:x-small; text-anchor:middle">Get every apartment for selected month <br /> (first apt. in specified range for selected year by default)</label>
             <br />
             <br />
 
-            <pre style="float:left"> </pre><label style="float:left; font-weight:500">Sorting</label><pre style="float:left"> </pre>
+            <pre style="float:left"> </pre>
+            <div class="form-group">
+            <input type="submit" value="Apply" class="btn btn-outline-success" style="float:left" />
+            <pre style="float:left"> </pre>
+            <label style="float:left; font-weight:500">Sorting</label>
+            <pre style="float:left"> </pre>
             <select name="sort" id="sort" style="float:left">
                 <option value="ApartAsc">Apart. ascending</option>
                 <option value="ApartDesc">Apart. descending</option>
                 <option value="DateAsc">Date ascending</option>
                 <option value="DateDesc">Date descending</option>
-                <option value="ChargesAsc">Charges ascending</option>
-                <option value="ChargesDesc">Charges descending</option>
+                <option value="PaymentAsc">Payment ascending</option>
+                <option value="PaymentDesc">Payment descending</option>
             </select>
-            <br />
-            <br />
-
-            <pre style="float:left"> </pre><div class="form-group">
-            <input type="submit" value="Apply" class="btn btn-outline-success" />
             </div>
         </form>
     </ul>

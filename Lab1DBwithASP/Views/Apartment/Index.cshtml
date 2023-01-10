@@ -80,12 +80,14 @@
             var collection = from element in Model
                              orderby element.MonthId ascending
                              group element by element.Id;
-            double remaining = 0;
+            decimal remaining = 0;
             int month = 0;
+            int counter = 1;
         }
 
 @foreach (var item in collection) {
-        if (item.ElementAt(0).Id == 0) break;   
+        if (item.ElementAt(0).Id == 0) break;
+            counter = 1;
             <tr>
             <td>
                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -102,12 +104,24 @@
             </td>
                 @foreach(var subitem in item)
                 {
+
+                    @if (subitem != null)
+                        if (counter != subitem.MonthId)
+                            while (counter != subitem.MonthId)
+                            {
+                                <td></td>
+                                counter++;
+                            }
+
                     <td>
                         <a class="btn btn-outline-primary" href="/Apartment/Details/?id=@subitem.Id&year=@subitem.Year&month=@subitem.MonthId" role="button">
                         @Html.DisplayFor(modelItem => subitem.Additional)  <br>
                         @Html.DisplayFor(modelItem => subitem.Paid)        <br>
                         @Html.DisplayFor(modelItem => subitem.Left) </a>
                         @{remaining = subitem.Left; month = subitem.MonthId;}
+                        @{
+                            counter++;
+                        }
                     </td>
                 }
             <td>

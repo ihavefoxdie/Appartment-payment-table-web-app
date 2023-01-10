@@ -8,15 +8,15 @@ namespace Lab1DBwithASP.Models
         [DisplayName("Apartment")]
         public UInt32 Id { get; set; }
         [DisplayName("Initial Charges")]
-        public double First { get; set; }
+        public decimal First { get; set; }
         [DisplayName("Month Number")]
         public int MonthId { get; set; }
         [DisplayName("Additional Charges")]
-        public double Additional { get; set; }
+        public decimal Additional { get; set; }
         [DisplayName("Paid")]
-        public double Paid { get; set; }
+        public decimal Paid { get; set; }
         [DisplayName("Remaining payment")]
-        public double Left { get; set; }
+        public decimal Left { get; set; }
         public UInt32 Year { get; set; }
         public string? Month { get; set; }
 

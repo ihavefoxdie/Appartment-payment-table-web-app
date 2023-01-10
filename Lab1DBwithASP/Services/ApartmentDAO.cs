@@ -117,8 +117,8 @@ namespace Lab1DBwithASP.Services
 
                     ApartmentModel OldApartment = GetApartmentById((int)apartment.Id, (int)apartment.Year, apartment.MonthId);
 
-                    double oldVal = OldApartment.Additional - OldApartment.Paid;
-                    double newVal = apartment.Additional - apartment.Paid;
+                    decimal oldVal = OldApartment.Additional - OldApartment.Paid;
+                    decimal newVal = apartment.Additional - apartment.Paid;
                     newVal -= oldVal;
 
                     //mySqlCommand = new(sqlStatement_1, connection);
@@ -161,7 +161,7 @@ namespace Lab1DBwithASP.Services
 
         public List<ApartmentModel> GetApartmentYear(int year, int id)
         {
-            string sqlStatement = "SELECT * FROM apartvalues t2 INNER JOIN months t3 ON t2.fk_id_month = t3.id_month WHERE t2.year = @yearNum AND t2.fk_id_apartment = @Id";
+            string sqlStatement = "SELECT * FROM apartvalues t2 INNER JOIN months t3 ON t2.fk_id_month = t3.id_month INNER JOIN turnoversheet t1 on t2.fk_id_apartment = t1.id WHERE t2.year = @yearNum AND t2.fk_id_apartment = @Id";
             List<ApartmentModel>? apartments = null;
 
             using (MySqlConnection connection = new(connectionString))
@@ -178,12 +178,13 @@ namespace Lab1DBwithASP.Services
                     apartments.Add(new ApartmentModel()
                     {
                         MonthId = (int)reader[0],
-                        Additional = (double)reader[1],
-                        Paid = (double)reader[2],
-                        Left = (double)reader[3],
+                        Additional = (decimal)reader[1],
+                        Paid = (decimal)reader[2],
+                        Left = (decimal)reader[3],
                         Id = (UInt32)reader[4],
                         Year = (UInt32)reader[5],
-                        Month = (string)reader[8]
+                        Month = (string)reader[8],
+                        First = (decimal)reader[10]
                     });
                 }
 
@@ -197,7 +198,7 @@ namespace Lab1DBwithASP.Services
 
         public List<ApartmentModel> GetApartmentsMonth(int year, int month, int apartStart, int apartEnd)
         {
-            string sqlStatement = "SELECT * FROM apartvalues t2 INNER JOIN months t3 ON t2.fk_id_month = t3.id_month WHERE t2.year = @yearNum AND t2.fk_id_month = @monthNum AND t2.fk_id_apartment >= @apartStart AND t2.fk_id_apartment <= @apartEnd";
+            string sqlStatement = "SELECT * FROM apartvalues t2 INNER JOIN months t3 ON t2.fk_id_month = t3.id_month INNER JOIN turnoversheet t1 on t2.fk_id_apartment = t1.id WHERE t2.year = @yearNum AND t2.fk_id_month = @monthNum AND t2.fk_id_apartment >= @apartStart AND t2.fk_id_apartment <= @apartEnd";
             List<ApartmentModel>? apartments = null;
 
             using (MySqlConnection connection = new(connectionString))
@@ -216,12 +217,13 @@ namespace Lab1DBwithASP.Services
                     apartments.Add(new ApartmentModel()
                     {
                         MonthId = (int)reader[0],
-                        Additional = (double)reader[1],
-                        Paid = (double)reader[2],
-                        Left = (double)reader[3],
+                        Additional = (decimal)reader[1],
+                        Paid = (decimal)reader[2],
+                        Left = (decimal)reader[3],
                         Id = (UInt32)reader[4],
                         Year = (UInt32)reader[5],
-                        Month = (string)reader[8]
+                        Month = (string)reader[8],
+                        First = (decimal)reader[10]
                     });
                 }
 
@@ -253,11 +255,11 @@ namespace Lab1DBwithASP.Services
                     apartments = new ApartmentModel
                     {
                         Id = (UInt32)reader[0],
-                        First = (double)reader[1],
+                        First = (decimal)reader[1],
                         MonthId = (int)reader[2],
-                        Additional = (double)reader[3],
-                        Paid = (double)reader[4],
-                        Left = (double)reader[5],
+                        Additional = (decimal)reader[3],
+                        Paid = (decimal)reader[4],
+                        Left = (decimal)reader[5],
                         Year = (UInt32)reader[7],
                         Month = (string)reader[10]
                     };
@@ -298,11 +300,11 @@ namespace Lab1DBwithASP.Services
                         apartments.Add(new ApartmentModel
                         {
                             Id = (UInt32)reader[0],
-                            First = (double)reader[1],
+                            First = (decimal)reader[1],
                             MonthId = (int)reader[2],
-                            Additional = (double)reader[3],
-                            Paid = (double)reader[4],
-                            Left = (double)reader[5],
+                            Additional = (decimal)reader[3],
+                            Paid = (decimal)reader[4],
+                            Left = (decimal)reader[5],
                             Year = (UInt32)reader[7],
                             Month = (string)reader[10]
                         });
@@ -336,11 +338,11 @@ namespace Lab1DBwithASP.Services
             if (GetApartmentById((int)model.Id, (int)model.Year, model.MonthId).Id == 0)
             {
                 sqlCommand.Parameters.Add("@id", MySqlDbType.UInt32).Value = model.Id;
-                sqlCommand.Parameters.Add("@inSaldo", MySqlDbType.Double).Value = model.First;
-                sqlCommand.Parameters.Add("@id_month", MySqlDbType.Int32).Value = 1;
-                sqlCommand.Parameters.Add("@additional", MySqlDbType.Double).Value = model.Additional;
-                sqlCommand.Parameters.Add("@paid", MySqlDbType.Double).Value = model.Paid;
-                sqlCommand.Parameters.Add("@remain", MySqlDbType.Double).Value = model.Additional + model.First - model.Paid;
+                sqlCommand.Parameters.Add("@inSaldo", MySqlDbType.Decimal).Value = model.First;
+                sqlCommand.Parameters.Add("@id_month", MySqlDbType.Int32).Value = model.MonthId;
+                sqlCommand.Parameters.Add("@additional", MySqlDbType.Decimal).Value = model.Additional;
+                sqlCommand.Parameters.Add("@paid", MySqlDbType.Decimal).Value = model.Paid;
+                sqlCommand.Parameters.Add("@remain", MySqlDbType.Decimal).Value = model.Additional + model.First - model.Paid;
                 sqlCommand.Parameters.Add("@yearnum", MySqlDbType.UInt32).Value = model.Year;
 
                 try
@@ -369,7 +371,7 @@ namespace Lab1DBwithASP.Services
 
         public int Update(ApartmentModel model)
         {
-            int idNumber = -1;
+            int returnNumber = -1;
 
             string sqlStatement = "INSERT INTO apartvalues (fk_id_month, additional, paid, apartvalues.remaining, fk_id_apartment, apartvalues.year) VALUES (@id_month, @additional, @paid, @remain, @id, @year);";
             string yearStatement = "SELECT year FROM apartvalues t1 WHERE t1.fk_id_apartment = @id order by year desc";
@@ -384,7 +386,7 @@ namespace Lab1DBwithASP.Services
             {
                 UInt32 year = 0;
                 int month = 0;
-                double Debt = 0;
+                decimal Debt = 0;
 
                 connection.Open();
                 MySqlDataReader reader = sqlCommand.ExecuteReader();
@@ -407,7 +409,7 @@ namespace Lab1DBwithASP.Services
                 sqlCommand.Parameters.Add("@year", MySqlDbType.UInt32).Value = year;
                 reader = sqlCommand.ExecuteReader();
                 reader.Read();
-                Debt = (double)reader[0];
+                Debt = (decimal)reader[0];
                 reader.Close();
 
                 if (month == 12)
@@ -421,12 +423,14 @@ namespace Lab1DBwithASP.Services
                 sqlCommand = new(sqlStatement, connection);
                 sqlCommand.Parameters.Add("@id", MySqlDbType.UInt32).Value = model.Id;
                 sqlCommand.Parameters.Add("@id_month", MySqlDbType.Int32).Value = month;
-                sqlCommand.Parameters.Add("@additional", MySqlDbType.Double).Value = model.Additional;
-                sqlCommand.Parameters.Add("@paid", MySqlDbType.Double).Value = model.Paid;
-                sqlCommand.Parameters.Add("@remain", MySqlDbType.Double).Value = model.Additional + Debt - model.Paid;
-                sqlCommand.Parameters.Add("@year", MySqlDbType.Double).Value = year;
+                sqlCommand.Parameters.Add("@additional", MySqlDbType.Decimal).Value = model.Additional;
+                sqlCommand.Parameters.Add("@paid", MySqlDbType.Decimal).Value = model.Paid;
+                sqlCommand.Parameters.Add("@remain", MySqlDbType.Decimal).Value = model.Additional + Debt - model.Paid;
+                sqlCommand.Parameters.Add("@year", MySqlDbType.UInt32).Value = year;
                 sqlCommand.ExecuteNonQuery();
-                return idNumber = (int)model.Id;
+
+                returnNumber = (int)year;
+                return returnNumber;
             }
             catch (Exception ex)
             {
@@ -435,7 +439,7 @@ namespace Lab1DBwithASP.Services
                 {
                     connection.Close();
                 }
-                return idNumber;
+                return returnNumber;
             }
         }
     }

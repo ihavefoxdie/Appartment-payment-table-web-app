@@ -15,6 +15,11 @@ namespace Lab1DBwithASP.Controllers
             return View(apartmentDAO.GetApartments(year));
         }
 
+        public IActionResult InitialChargeIndex(int year, int month, bool apartsMonth, int apartStart, int apartEnd, string sort)
+        {
+            return (ChargesIndex(year, month, apartsMonth, apartStart, apartEnd, sort));
+        }
+
         public IActionResult PaymentsIndex(int year, int month, bool apartsMonth, int apartStart, int apartEnd, string sort)
         {
             ApartmentDAO apartmentDAO = new();
@@ -155,8 +160,8 @@ namespace Lab1DBwithASP.Controllers
         public IActionResult Update(ApartmentModel apartmentModel)
         {
             ApartmentDAO apartmentDAO = new();
-            apartmentDAO.Update(apartmentModel);
-            return View("Index", apartmentDAO.GetApartments((int)DateTime.Now.Year));
+            int year = apartmentDAO.Update(apartmentModel);
+            return View("Index", apartmentDAO.GetApartments(year));
         }
 
         // POST: AppartmentController/Edit/5
