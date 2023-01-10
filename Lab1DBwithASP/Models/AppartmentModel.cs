@@ -13,7 +13,7 @@ namespace Lab1DBwithASP.Models
         public int MonthId { get; set; }
         [DisplayName("Additional Charges")]
         public double Additional { get; set; }
-        [DisplayName("Paid this month")]
+        [DisplayName("Paid")]
         public double Paid { get; set; }
         [DisplayName("Remaining payment")]
         public double Left { get; set; }

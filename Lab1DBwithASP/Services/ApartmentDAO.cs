@@ -86,7 +86,7 @@ namespace Lab1DBwithASP.Services
             //string sqlStatement_1 = "SELECT * FROM apartvalues WHERE fk_id_apartment = @Id AND year = @yearNum AND fk_id_month = @monthNum;";
             string sqlStatement_2 = "UPDATE apartvalues SET remaining = remaining + @newValue WHERE fk_id_apartment = @Id AND year = @yearNum AND fk_id_month >= @monthNum;";
             string sqlStatement_3 = "UPDATE apartvalues SET remaining = remaining + @newValue WHERE fk_id_apartment = @Id AND year > @yearNum;";
-            string sqlStatement_4 = "UPDATE apartvalues SET (additional, paid) WITH VALUES (@add, @paid) WHERE fk_id_apartment = @Id AND year = @yearNum AND fk_id_month = @monthNum;";
+            string sqlStatement_4 = "UPDATE apartvalues SET additional = @add, paid = @paid WHERE fk_id_apartment = @Id AND year = @yearNum AND fk_id_month = @monthNum;";
 
             using (MySqlConnection connection = new(connectionString))
             {
@@ -144,7 +144,9 @@ namespace Lab1DBwithASP.Services
                     mySqlCommand.Parameters.AddWithValue("@monthNum", apartment.MonthId);
                     mySqlCommand.Parameters.AddWithValue("@add", apartment.Additional);
                     mySqlCommand.Parameters.AddWithValue("@paid", apartment.Paid);
-                    
+
+                    mySqlCommand.ExecuteNonQuery();
+
                     connection.Close();
                 }
                 catch (Exception ex)
