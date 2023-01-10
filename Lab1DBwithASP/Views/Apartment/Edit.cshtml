@@ -37,16 +37,16 @@
                 <input asp-for="Paid" class="form-control" />
                 <span asp-validation-for="Paid" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" /> <a href="/Apartment/Index/?year=@Html.DisplayFor(value=>Model.Year)">Back to List</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

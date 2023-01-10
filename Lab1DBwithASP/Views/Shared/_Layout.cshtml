@@ -12,10 +12,14 @@
     <link rel="stylesheet" href="~/Lab1DBwithASP.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
+
+        
+        <!-- Sidebar-->
+            
+        
+
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Lab1DBwithASP</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -25,23 +29,36 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Apartment/Index/?year=@DateTime.Now.Year">Apartments</a>
-                        </li>
+
                     </ul>
                 </div>
             </div>
         </nav>
-    </header>
-    <div class="container">
+    <div class="d-flex" id="wrapper">
+        <div class="border border-end bg-white" style="min-width:10%;">
+                <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/Apartment/ChargesIndex/">Charges</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/Apartment/PaymentsIndex/">Payments</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Initial charges</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/Apartment/Index/?year=@DateTime.Now.Year">Table</a>
+                </div>
+            </div>
+    
+        
+    
+            
+    
+    <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+    </div>
+
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - Lab1DBwithASP - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - Turnover Sheet Application - <a href="https://github.com/ihavefoxdie/Appartment-payment-table-web-app">GitHub</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

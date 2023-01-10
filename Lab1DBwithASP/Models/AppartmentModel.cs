@@ -7,11 +7,11 @@ namespace Lab1DBwithASP.Models
     {
         [DisplayName("Apartment")]
         public UInt32 Id { get; set; }
-        [DisplayName("Initial Payment")]
+        [DisplayName("Initial Charges")]
         public double First { get; set; }
         [DisplayName("Month Number")]
         public int MonthId { get; set; }
-        [DisplayName("Additional Payment")]
+        [DisplayName("Additional Charges")]
         public double Additional { get; set; }
         [DisplayName("Paid this month")]
         public double Paid { get; set; }

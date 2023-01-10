@@ -1,0 +1,111 @@
+﻿@model IEnumerable<Lab1DBwithASP.Models.ApartmentModel>
+
+
+
+@{
+    ViewData["Title"] = "PaymentsIndex";
+}
+
+
+
+<h2><label style="font-size:x-large">PAYMENTS</label></h2>
+
+
+<div>
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Filters</button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="min-width:18%">
+                       
+                    
+        <form asp-action="PaymentsIndex">
+            <pre style="float:left"> </pre><label style="float:left; font-size:150%; font-weight:500">Time Frame</label><pre style="float:left"></pre>
+            <div>
+                <pre style="float:right"> </pre>
+                <input name="year" class="form-control" placeholder="Year" style="max-width:19%; min-width:19%; float:right" />
+            </div>
+                <pre style="float:right"> </pre>
+            <div>
+                <input name="month" class="form-control" placeholder="Month" style="max-width:22%; min-width:22%; float:right" />
+            </div>
+            <pre style="float:left"> </pre>
+            <br />
+            <br />
+            
+            
+            <pre style="float:left"> </pre><label style="float:left; font-size:150%; font-weight:500">Apt. range</label><pre style="float:left"></pre>
+            <div>
+                <pre style="float:right"> </pre>
+                <input name="apartEnd" class="form-control" style="max-width:18%; min-width:18%; float:right" />
+            </div>
+            <pre style="float:right"> </pre><div style="float:right; font-size:135%">-</div><pre style="float:right"> </pre>
+            <div>
+                <input name="apartStart" class="form-control" style="max-width:18%; min-width:18%; float:right" />
+            </div>
+            <br />
+            <br />
+
+
+            <pre style="float:left"> </pre>
+            <input id="apartsMonth" type="checkbox" value="true" name="apartsMonth" />
+            Get every apartment for selected month <br /> (one apartment for selected year by default)
+            <input type="hidden" value="false" name="apartsMonth" />
+            <br />
+            <br />
+
+            <pre style="float:left"> </pre><label style="float:left; font-weight:500">Sorting</label><pre style="float:left"> </pre>
+            <select name="sort" id="sort" style="float:left">
+                <option value="ApartAsc">Apart. ascending</option>
+                <option value="ApartDesc">Apart. descending</option>
+                <option value="DateAsc">Date ascending</option>
+                <option value="DateDesc">Date descending</option>
+                <option value="PaymentAsc">Payment ascending</option>
+                <option value="PaymentDesc">Payment descending</option>
+            </select>
+            <br />
+            <br />
+
+            <pre style="float:left"> </pre><div class="form-group">
+            <input type="submit" value="Apply" class="btn btn-outline-success" />
+            </div>
+        </form>
+    </ul>
+</div>
+<br />
+
+@*<p>
+    <a asp-action="Create">Create New</a>
+</p>*@
+<table class="table table-borderless" style="max-width:40%">
+    <thead>
+        <tr>
+            <th>
+                Date
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Paid)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Month) @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Paid)
+            </td>
+            <td>
+                <a class="btn btn-outline-primary" href="/Apartment/Edit/?id=@item.Id&year=@item.Year&month=@item.MonthId" role="button">Edit</a>
+                <a class="btn btn-outline-primary" href="/Apartment/Details/?id=@item.Id&year=@item.Year&month=@item.MonthId" role="button">Details</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

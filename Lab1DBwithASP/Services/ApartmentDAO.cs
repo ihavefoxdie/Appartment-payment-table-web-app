@@ -31,9 +31,59 @@ namespace Lab1DBwithASP.Services
             return 0;
         }
 
+        public int DeleteEntry(int id)
+        {
+            string sqlStatement = "DELETE FROM apartvalues WHERE fk_id_apartment = @Id AND year = @yearNum AND fk_id_month = @monthNum";
+            string yearStatement = "SELECT year FROM apartvalues t1 WHERE t1.fk_id_apartment = @id order by year desc";
+            string monthStatement = "SELECT fk_id_month FROM apartvalues t1 WHERE t1.fk_id_apartment = @id AND t1.year = @yearNum order by fk_id_month desc";
+
+            using (MySqlConnection connection = new(connectionString))
+            {
+                try
+                {
+                    MySqlCommand sqlCommand = new(yearStatement, connection);
+                    sqlCommand.Parameters.AddWithValue("@Id", (UInt32)id);
+                    
+
+                    connection.Open();
+                    MySqlDataReader reader = sqlCommand.ExecuteReader();
+                    reader.Read();
+                    UInt32 year = (UInt32)reader[0];
+                    reader.Close();
+
+                    sqlCommand = new(monthStatement, connection);
+                    sqlCommand.Parameters.AddWithValue("@Id", (UInt32)id);
+                    sqlCommand.Parameters.AddWithValue("@yearNum", year);
+
+                    reader = sqlCommand.ExecuteReader();
+                    reader.Read();
+                    int month = (int)reader[0];
+                    reader.Close();
+
+                    sqlCommand = new(sqlStatement, connection);
+                    sqlCommand.Parameters.AddWithValue("@Id", (UInt32)id);
+                    sqlCommand.Parameters.AddWithValue("@yearNum", year);
+                    sqlCommand.Parameters.AddWithValue("@monthNum", month);
+
+                    sqlCommand.ExecuteNonQuery();
+
+                    connection.Close();
+
+                    return 1;
+
+                } catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+
+            return -1;
+        }
+
         public int Edit(ApartmentModel apartment)
         {
-            string sqlStatement_1 = "SELECT * FROM apartvalues WHERE fk_id_apartment = @Id AND year = @yearNum AND fk_id_month = @monthNum;";
+            //string sqlStatement_1 = "SELECT * FROM apartvalues WHERE fk_id_apartment = @Id AND year = @yearNum AND fk_id_month = @monthNum;";
             string sqlStatement_2 = "UPDATE apartvalues SET remaining = remaining + @newValue WHERE fk_id_apartment = @Id AND year = @yearNum AND fk_id_month >= @monthNum;";
             string sqlStatement_3 = "UPDATE apartvalues SET remaining = remaining + @newValue WHERE fk_id_apartment = @Id AND year > @yearNum;";
             string sqlStatement_4 = "UPDATE apartvalues SET (additional, paid) WITH VALUES (@add, @paid) WHERE fk_id_apartment = @Id AND year = @yearNum AND fk_id_month = @monthNum;";
@@ -107,6 +157,79 @@ namespace Lab1DBwithASP.Services
             }
         }
 
+        public List<ApartmentModel> GetApartmentYear(int year, int id)
+        {
+            string sqlStatement = "SELECT * FROM apartvalues t2 INNER JOIN months t3 ON t2.fk_id_month = t3.id_month WHERE t2.year = @yearNum AND t2.fk_id_apartment = @Id";
+            List<ApartmentModel>? apartments = null;
+
+            using (MySqlConnection connection = new(connectionString))
+            {
+                MySqlCommand sqlCommand = new(sqlStatement, connection);
+                sqlCommand.Parameters.AddWithValue("@yearNum", (UInt32)year);
+                sqlCommand.Parameters.AddWithValue("@Id", (UInt32)id);
+
+                connection.Open();
+                MySqlDataReader reader = sqlCommand.ExecuteReader();
+                apartments = new List<ApartmentModel>();
+                while (reader.Read())
+                {
+                    apartments.Add(new ApartmentModel()
+                    {
+                        MonthId = (int)reader[0],
+                        Additional = (double)reader[1],
+                        Paid = (double)reader[2],
+                        Left = (double)reader[3],
+                        Id = (UInt32)reader[4],
+                        Year = (UInt32)reader[5],
+                        Month = (string)reader[8]
+                    });
+                }
+
+            }
+
+            if (apartments != null)
+                return apartments;
+            return new();
+        }
+
+
+        public List<ApartmentModel> GetApartmentsMonth(int year, int month, int apartStart, int apartEnd)
+        {
+            string sqlStatement = "SELECT * FROM apartvalues t2 INNER JOIN months t3 ON t2.fk_id_month = t3.id_month WHERE t2.year = @yearNum AND t2.fk_id_month = @monthNum AND t2.fk_id_apartment >= @apartStart AND t2.fk_id_apartment <= @apartEnd";
+            List<ApartmentModel>? apartments = null;
+
+            using (MySqlConnection connection = new(connectionString))
+            {
+                MySqlCommand sqlCommand= new(sqlStatement, connection);
+                sqlCommand.Parameters.AddWithValue("@yearNum", (UInt32)year);
+                sqlCommand.Parameters.AddWithValue("@monthNum", month);
+                sqlCommand.Parameters.AddWithValue("@apartStart", (UInt32)apartStart);
+                sqlCommand.Parameters.AddWithValue("@apartEnd", (UInt32)apartEnd);
+
+                connection.Open();
+                MySqlDataReader reader = sqlCommand.ExecuteReader();
+                apartments = new List<ApartmentModel>();
+                while (reader.Read())
+                {
+                    apartments.Add(new ApartmentModel()
+                    {
+                        MonthId = (int)reader[0],
+                        Additional = (double)reader[1],
+                        Paid = (double)reader[2],
+                        Left = (double)reader[3],
+                        Id = (UInt32)reader[4],
+                        Year = (UInt32)reader[5],
+                        Month = (string)reader[8]
+                    });
+                }
+
+            }
+
+            if (apartments != null)
+                return apartments;
+            return new();
+        }
+
         public ApartmentModel GetApartmentById(int id, int year, int month)
         {
             ApartmentModel? apartments = null;
@@ -166,7 +289,7 @@ namespace Lab1DBwithASP.Services
                 try
                 {
                     connection.Open();
-
+                    bool check = false;
                     MySqlDataReader reader = sqlCommand.ExecuteReader();
                     while (reader.Read())
                     {
@@ -181,8 +304,11 @@ namespace Lab1DBwithASP.Services
                             Year = (UInt32)reader[7],
                             Month = (string)reader[10]
                         });
+                        check = true;
                     }
                     reader.Close();
+                    if(!check)
+                        apartments.Add(new ApartmentModel { Year = (UInt32)year });
                 }
                 catch (Exception ex)
                 {

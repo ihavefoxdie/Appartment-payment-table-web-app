@@ -2,23 +2,26 @@
 
 @{
     ViewData["Title"] = "View";
+    int year = (int)Model.First().Year;
 }
 <p>
-    <h1>Appartments sheet</h1>
+    <h2><label style="font-size:x-large">APPARTMENT SHEET FOR </label> @Html.DisplayFor(model => model.First().Year)</h2>
 
+    <a class="btn btn-outline-primary" href="/Apartment/Index/?year=@{year--; @Html.DisplayFor(number => year)}" role="button" style="float:left"> < </a>
+    <pre style="float:left"> </pre>
     <form asp-action="Index">
         <div>
-            <input name="year" class="form-control" placeholder="Search Year" style="max-width:8.5%" /> <a class="btn btn-primary" href="/Apartment/CreateForm/" role="button">Create New</a>
+            <input name="year" class="form-control" placeholder="Search Year" style="max-width:7%; min-width:7%; float:left" />
         </div>
     </form>
+    <pre style="float:left"> </pre>
+    <a class="btn btn-outline-primary" href="/Apartment/Index/?year=@{year+=2; @Html.DisplayFor(number => year)}" role="button" style="float:left"> > </a>
+    <pre style="float:left"> </pre>
+    <a class="btn btn-primary" href="/Apartment/CreateForm/" role="button">Add new apartment</a>
+    <br /><br />
 
-    <br />
-    <div class="form-group">
-        
-    </div>
+    
 </p>
-
-
 
 
 <table class="table table-borderless">
@@ -82,14 +85,15 @@
         }
 
 @foreach (var item in collection) {
-
-        <tr>
+        if (item.ElementAt(0).Id == 0) break;   
+            <tr>
             <td>
                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         @Html.DisplayFor(modelItem => item.ElementAt(0).Id)
                 </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" asp-action="UpdateForm" asp-route-id="@item.ElementAt(0).Id">Update</a></li>
+                        <li><a class="dropdown-item" asp-action="UpdateForm" asp-route-id="@item.ElementAt(0).Id" asp-route-year="@item.ElementAt(0).Year">Update</a></li>
+                        <li><a class="dropdown-item" asp-action="DeleteEntry" asp-route-id="@item.ElementAt(0).Id" asp-route-year="@item.ElementAt(0).Year">Delete Last Entry</a></li>
                         <li><a class="dropdown-item" asp-action="Delete" asp-route-id="@item.ElementAt(0).Id">Delete</a></li>
                     </ul>
             </td>
